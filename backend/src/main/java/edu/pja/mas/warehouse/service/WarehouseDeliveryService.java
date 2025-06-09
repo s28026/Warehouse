@@ -76,6 +76,16 @@ public class WarehouseDeliveryService {
             throw new IllegalArgumentException("ZIP code must be in format XX-XXX");
     }
 
+    // This method is a placeholder for distance validation logic.
+    // In a real application, you would integrate with a mapping service to calculate the distance.
+    // For this example, we will simulate it with a random number.
+    private boolean checkDistance(String pickupAddress) {
+        Random random = new Random();
+        int distance = random.nextInt(550); // Simulating distance in km
+
+        return distance > 275; // 50%
+    }
+
     public void setPickupAddress(Long deliveryId, String pickupAddress) {
         validatePickupAddress(pickupAddress);
 
@@ -85,11 +95,8 @@ public class WarehouseDeliveryService {
                 wd.getStatus() != WarehouseDeliveryStatus.INVALID_ADDRESS)
             throw new IllegalArgumentException("Delivery is not in a state that allows setting pickup address");
 
-        Random random = new Random();
-        int distance = random.nextInt(550);
-
         try {
-            if (distance > 275) {
+            if (!checkDistance(pickupAddress)) {
                 wd.setStatus(WarehouseDeliveryStatus.INVALID_ADDRESS);
                 throw new IllegalArgumentException("Distance exceeds maximum limit of 500 km");
             } else {
