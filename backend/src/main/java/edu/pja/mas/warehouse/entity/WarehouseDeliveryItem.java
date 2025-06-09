@@ -3,10 +3,7 @@ package edu.pja.mas.warehouse.entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 
 @Entity
@@ -24,10 +21,14 @@ public class WarehouseDeliveryItem {
 
     @ManyToOne
     @JoinColumn(name = "item_id", nullable = false)
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     private StorageItem storageItem;
 
     @ManyToOne
     @JoinColumn(name = "delivery_id", nullable = false)
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     private WarehouseDelivery delivery;
 
     @NotNull

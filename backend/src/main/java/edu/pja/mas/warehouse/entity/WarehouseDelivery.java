@@ -33,9 +33,6 @@ public class WarehouseDelivery {
     private LocalDateTime confirmedAt;
 
     @Nullable
-    private LocalDateTime pickupAt;
-
-    @Nullable
     private LocalDateTime deliveredAt;
 
     @Pattern(

@@ -34,7 +34,9 @@ public class Warehouse {
 
     @OneToMany(mappedBy = "warehouse")
     @MapKey(name = "roomNumber")
-    private Map<Long, StorageUnit> storageUnits;
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    private Map<Integer, StorageUnit> storageUnits;
 
     @OneToMany(mappedBy = "warehouse")
     @EqualsAndHashCode.Exclude

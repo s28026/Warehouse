@@ -35,17 +35,12 @@ public class EmployeeController {
     }
 
     @PostMapping("/{employeePesel}/complaint")
-    public ResponseEntity<?> createComplaint(
+    public ResponseEntity<EmployeeComplaintDTO> createComplaint(
             @PathVariable String employeePesel,
             @RequestBody EmployeeComplaintPostDTO dto
     ) {
-        try {
-            EmployeeComplaint employeeComplaint = employeeComplaintService.save(employeePesel, dto);
-
-            return ResponseEntity.ok(EmployeeComplaintDTO.from(employeeComplaint));
-        } catch (IllegalArgumentException | ValidationException e) {
-            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
-        }
+        EmployeeComplaint employeeComplaint = employeeComplaintService.save(employeePesel, dto);
+        return ResponseEntity.ok(EmployeeComplaintDTO.from(employeeComplaint));
     }
 
     @PostMapping("/{employeePesel}/complaint/{complaintId}")
@@ -53,32 +48,27 @@ public class EmployeeController {
             @PathVariable Long complaintId,
             @RequestBody EmployeeComplaintResolveDTO dto
     ) {
-        try {
-            employeeComplaintService.resolveComplaint(complaintId, dto);
-
-            return ResponseEntity.ok(Map.of("message", "Complaint resolved successfully."));
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
-        }
+        employeeComplaintService.resolveComplaint(complaintId, dto);
+        return ResponseEntity.ok(Map.of("message", "Complaint resolved successfully."));
     }
 
     @PostMapping("/{employeePesel}/operator")
-    public ResponseEntity<?> assignAsWarehouseOperator(
+    public ResponseEntity<WarehouseEmployeeDTO> assignAsWarehouseOperator(
             @PathVariable String employeePesel,
             @RequestBody WarehouseOperatorPostDTO dto
     ) {
         WarehouseEmployee warehouseEmployee = warehouseEmployeeService.findByEmployeePesel(employeePesel);
-
-        return ResponseEntity.ok(warehouseEmployeeService.changeToOperator(warehouseEmployee, dto));
+        warehouseEmployee = warehouseEmployeeService.changeToOperator(warehouseEmployee, dto);
+        return ResponseEntity.ok(WarehouseEmployeeDTO.from(warehouseEmployee));
     }
 
     @PostMapping("/{employeePesel}/worker")
-    public ResponseEntity<?> assignAsWarehouseWorker(
+    public ResponseEntity<WarehouseEmployeeDTO> assignAsWarehouseWorker(
             @PathVariable String employeePesel,
             @RequestBody WarehouseWorkerPostDTO dto
     ) {
         WarehouseEmployee warehouseEmployee = warehouseEmployeeService.findByEmployeePesel(employeePesel);
-
-        return ResponseEntity.ok(warehouseEmployeeService.changeToWorker(warehouseEmployee, dto));
+        warehouseEmployee = warehouseEmployeeService.changeToWorker(warehouseEmployee, dto);
+        return ResponseEntity.ok(WarehouseEmployeeDTO.from(warehouseEmployee));
     }
 }

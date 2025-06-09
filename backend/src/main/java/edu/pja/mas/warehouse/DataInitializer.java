@@ -52,7 +52,6 @@ public class DataInitializer {
         wd.setPickupAddress("Cudna, 93, Warsaw, 03-290");
         wd.setRegisteredAt(LocalDateTime.of(today, time.minusHours(4).minusMinutes(30).toLocalTime()));
         wd.setConfirmedAt(LocalDateTime.of(today, time.minusHours(4).minusMinutes(26).toLocalTime()));
-        wd.setPickupAt(LocalDateTime.of(today, time.minusHours(2).minusMinutes(22).toLocalTime()));
         wd.setDeliveredAt(LocalDateTime.of(today, LocalTime.now()));
 
         wd.setAssignedDriver(dd.getDeliveryDriver());

@@ -12,7 +12,6 @@ import edu.pja.mas.warehouse.repository.DeclinedDeliveryRepository;
 import edu.pja.mas.warehouse.repository.DeliveryDriverRepository;
 import edu.pja.mas.warehouse.repository.WarehouseDeliveryRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -55,7 +54,7 @@ public class DeliveryDriverService {
     }
 
     public List<DeliveryDriverDTO> findAll() {
-        return DeliveryDriverDTO.from((List<DeliveryDriver>) deliveryDriverRepository.findAll());
+        return DeliveryDriverDTO.from(deliveryDriverRepository.findAll());
     }
 
     public void acceptDelivery(WarehouseDelivery delivery) {
@@ -81,29 +80,4 @@ public class DeliveryDriverService {
 
         deliveryDriverRepository.save(driver);
     }
-
-//    public void startShift(DeliveryDriver driver) {
-//        if (!driver.getEmployee().isDeliveryDriver())
-//            throw new IllegalArgumentException("Employee is not a delivery driver");
-//
-//        if (driver.getStatus() != DriverStatus.UNAVAILABLE)
-//            throw new IllegalArgumentException("Driver is not currently off shift");
-//
-////        employeeService.startShift(driver.getEmployee().getPesel());
-//
-//        driver.setStatus(DriverStatus.AVAILABLE);
-//        deliveryDriverRepository.save(driver);
-//    }
-//
-//    public void endShift(DeliveryDriver driver) {
-//        if (!driver.getEmployee().isDeliveryDriver())
-//            throw new IllegalArgumentException("Employee is not a delivery driver");
-//
-//        if (driver.getStatus() != DriverStatus.AVAILABLE)
-//            throw new IllegalArgumentException("Driver is not currently on shift");
-//
-////        employeeService.endShift(driver.getEmployee().getPesel());
-//        driver.setStatus(DriverStatus.UNAVAILABLE);
-//        deliveryDriverRepository.save(driver);
-//    }
 }

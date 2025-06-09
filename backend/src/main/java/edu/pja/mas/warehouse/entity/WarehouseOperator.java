@@ -23,7 +23,7 @@ public class WarehouseOperator implements IDriver {
     private Long id;
 
     @OneToOne
-    @JoinColumn(name = "warehouse_employee_id", unique = true)
+    @JoinColumn(name = "warehouse_employee_id", unique = true, nullable = false)
     private WarehouseEmployee warehouseEmployee;
 
     @NotBlank

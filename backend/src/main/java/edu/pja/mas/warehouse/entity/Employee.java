@@ -33,7 +33,7 @@ public class Employee extends Person {
     private LocalDate terminationDate;
 
     @Min(value = MIN_SALARY)
-    private int salary;
+    private Integer salary;
 
     @Builder.Default
     private List<Integer> breaksTakenToday = new ArrayList<>();

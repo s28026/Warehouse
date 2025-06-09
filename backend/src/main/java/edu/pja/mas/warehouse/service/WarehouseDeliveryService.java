@@ -15,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
@@ -33,6 +34,7 @@ public class WarehouseDeliveryService {
     private final WarehouseDeliveryItemRepository warehouseDeliveryItemRepository;
     private final StorageItemService storageItemService;
     private final WarehouseService warehouseService;
+    private final EmployeeService employeeService;
 
     public WarehouseDelivery save(WarehouseDeliveryPostDTO dto) {
         Warehouse warehouse = warehouseService.findById(dto.warehouseId());
@@ -222,5 +224,45 @@ public class WarehouseDeliveryService {
     public void destroyExpiredDeliveries() {
         LocalDate sevenDaysAgo = LocalDate.now().minusDays(7);
         warehouseDeliveryRepository.bulkDeleteDeliveriesMarkedForDestruction(sevenDaysAgo);
+    }
+
+    public void markForUnload(Long deliveryId) {
+        WarehouseDelivery wd = findById(deliveryId);
+
+        if (wd.getStatus() != WarehouseDeliveryStatus.IN_TRANSIT)
+            throw new IllegalArgumentException("Delivery is not in a state that allows marking for unload");
+
+        DeliveryDriver driver = wd.getAssignedDriver();
+        driver.setStatus(DriverStatus.AVAILABLE);
+        deliveryDriverRepository.save(driver);
+
+        wd.setDeliveredAt(LocalDateTime.now());
+        wd.setStatus(WarehouseDeliveryStatus.AWAITING_UNLOAD);
+        warehouseDeliveryRepository.save(wd);
+    }
+
+    public void unload(Long deliveryId, String employeePesel) {
+        WarehouseDelivery wd = findById(deliveryId);
+
+        if (wd.getStatus() != WarehouseDeliveryStatus.AWAITING_UNLOAD)
+            throw new IllegalArgumentException("Delivery is not in a state that allows assigning employee to unload");
+
+        Employee emp = employeeService.findById(employeePesel);
+        if (!emp.isWarehouseEmployee())
+            throw new IllegalArgumentException("Employee is not a warehouse employee");
+
+        wd.setStatus(WarehouseDeliveryStatus.UNLOADING);
+        wd.setAssignedWarehouseEmployee(emp.getWarehouseEmployee());
+        warehouseDeliveryRepository.save(wd);
+    }
+
+    public void markAsCompleted(Long deliveryId) {
+        WarehouseDelivery wd = findById(deliveryId);
+
+        if (wd.getStatus() != WarehouseDeliveryStatus.UNLOADING)
+            throw new IllegalArgumentException("Delivery is not in a state that allows marking as completed");
+
+        wd.setStatus(WarehouseDeliveryStatus.COMPLETED);
+        warehouseDeliveryRepository.save(wd);
     }
 }

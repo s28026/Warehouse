@@ -11,7 +11,6 @@ public record WarehouseDeliveryDTO(
         String pickupAddress,
         LocalDateTime registeredAt,
         LocalDateTime deliveredAt,
-        LocalDateTime pickupAt,
         WarehouseDeliveryStatus status
 //        DeliveryDriverDTO driver
 ) {
@@ -21,7 +20,6 @@ public record WarehouseDeliveryDTO(
                 delivery.getPickupAddress(),
                 delivery.getRegisteredAt(),
                 delivery.getDeliveredAt(),
-                delivery.getPickupAt(),
                 delivery.getStatus()
         );
     }

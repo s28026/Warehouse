@@ -23,7 +23,7 @@ public class DeliveryDriver implements IDriver {
     private Long id;
 
     @OneToOne
-    @JoinColumn(name = "employee_pesel")
+    @JoinColumn(name = "employee_pesel", unique = true, nullable = false)
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     private Employee employee;

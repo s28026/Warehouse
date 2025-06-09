@@ -19,13 +19,13 @@ public class WarehouseEmployee {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "employee_pesel")
+    @OneToOne
+    @JoinColumn(name = "employee_pesel", unique = true, nullable = false)
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     private Employee employee;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "warehouse_id")
     @EqualsAndHashCode.Exclude
     @ToString.Exclude

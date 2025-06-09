@@ -4,10 +4,7 @@ import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 
 @Entity
@@ -22,15 +19,19 @@ public class StorageUnit {
 
     @Min(100)
     @Max(199)
-    @Column(unique = true, nullable = false)
+    @Column(unique = true)
     private Integer roomNumber;
 
     @ManyToOne
     @JoinColumn(name = "warehouse_id", nullable = false)
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     private Warehouse warehouse;
 
     @OneToOne
     @JoinColumn(name = "warehouse_delivery_item_id", nullable = false)
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     private WarehouseDeliveryItem warehouseDeliveryItem;
 
     @Nullable

@@ -2,8 +2,8 @@ package edu.pja.mas.warehouse.enums;
 
 public enum WarehouseDeliveryStatus {
     AWAITING_PICKUP_ADDRESS,
-    AWAITING_DRIVER,
     INVALID_ADDRESS,
+    AWAITING_DRIVER,
     AWAITING_DRIVER_CONFIRMATION,
     DRIVER_REJECTED,
     DRIVER_TIMEOUT,

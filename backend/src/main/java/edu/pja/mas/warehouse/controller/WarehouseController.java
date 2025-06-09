@@ -34,11 +34,7 @@ public class WarehouseController {
             @RequestParam(defaultValue = "false") boolean withEmployees
     ) {
         Warehouse warehouse = warehouseService.findById(warehouseId, withEmployees);
-
-        if (warehouse == null)
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-        else
-            return ResponseEntity.ok(WarehouseDTO.from(warehouse));
+        return ResponseEntity.ok(WarehouseDTO.from(warehouse));
     }
 
     @GetMapping("/{warehouseId}/employees/")
@@ -46,30 +42,19 @@ public class WarehouseController {
             @PathVariable Long warehouseId
     ) {
         Warehouse warehouse = warehouseService.findById(warehouseId);
-
-        if (warehouse == null)
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-        else
-            return ResponseEntity.ok(WarehouseEmployeeDTO.fromList(warehouse.getEmployees()));
-
+        return ResponseEntity.ok(WarehouseEmployeeDTO.fromList(warehouse.getEmployees()));
     }
 
     @GetMapping("/")
     public ResponseEntity<List<WarehouseDTO>> getWarehouses() {
         List<Warehouse> all = warehouseService.findAll();
-
         return ResponseEntity.ok(WarehouseDTO.from(all));
     }
 
     @PostMapping("/")
     public ResponseEntity<WarehouseDTO> createWarehouse(@RequestBody WarehousePostDTO warehousePostDTO) {
         Warehouse createdWarehouse = warehouseService.save(warehousePostDTO);
-
-        if (createdWarehouse == null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
-        } else {
-            return ResponseEntity.status(HttpStatus.CREATED).body(WarehouseDTO.from(createdWarehouse));
-        }
+        return ResponseEntity.status(HttpStatus.CREATED).body(WarehouseDTO.from(createdWarehouse));
     }
 
     @GetMapping("/{warehouseId}/stored-items/{itemId}/availability")
@@ -78,7 +63,6 @@ public class WarehouseController {
             @PathVariable Long itemId
     ) {
         int availability = storageUnitService.getWarehouseItemAvailability(warehouseId, itemId);
-
         return ResponseEntity.ok(Map.of("availability", availability));
     }
 }

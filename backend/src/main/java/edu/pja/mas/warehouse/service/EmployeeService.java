@@ -66,7 +66,7 @@ public class EmployeeService {
     }
 
     public void employAsDeliveryDriver(Employee employee, DeliveryDriverPostDTO dto) {
-        if (employee.getEmployeeTypes().contains(EmployeeType.DELIVERY_DRIVER))
+        if (employee.isDeliveryDriver())
             throw new IllegalArgumentException("Employee is already employed as a delivery driver.");
 
         DeliveryDriver deliveryDriver = deliveryDriverRepository.findByEmployee(employee);
@@ -81,8 +81,8 @@ public class EmployeeService {
     }
 
     public void employAsWarehouseEmployee(Employee employee, WarehouseEmployeePostDTO dto) {
-        if (employee.getEmployeeTypes().contains(EmployeeType.WAREHOUSE_EMPLOYEE))
-            throw new IllegalArgumentException("Employee is already employed as a delivery driver.");
+        if (employee.isWarehouseEmployee())
+            throw new IllegalArgumentException("Employee is already employed as a warehouse employee.");
 
         WarehouseEmployee warehouseEmployee = warehouseEmployeeRepository.findByEmployee(employee);
 

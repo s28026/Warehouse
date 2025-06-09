@@ -6,7 +6,6 @@ import edu.pja.mas.warehouse.entity.WarehouseDelivery;
 import edu.pja.mas.warehouse.service.DeliveryDriverService;
 import edu.pja.mas.warehouse.service.StorageUnitService;
 import edu.pja.mas.warehouse.service.WarehouseDeliveryService;
-import jakarta.validation.ValidationException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,23 +23,15 @@ public class DeliveryController {
 
     @GetMapping("/{deliveryId}")
     public ResponseEntity<?> getDeliveryById(@PathVariable Long deliveryId) {
-        try {
-            WarehouseDelivery delivery = warehouseDeliveryService.findById(deliveryId);
-            return ResponseEntity.ok(WarehouseDeliveryDTO.from(delivery));
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
-        }
+        WarehouseDelivery delivery = warehouseDeliveryService.findById(deliveryId);
+        return ResponseEntity.ok(WarehouseDeliveryDTO.from(delivery));
     }
 
     @GetMapping("/{deliveryId}/available-delivery-drivers")
     public ResponseEntity<?> getAvailableDeliveryDrivers(@PathVariable Long deliveryId) {
-        try {
-            return ResponseEntity.ok(
-                    warehouseDeliveryService.findAllAvailableDeliveryDriversWithShift(deliveryId)
-            );
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
-        }
+        return ResponseEntity.ok(
+                warehouseDeliveryService.findAllAvailableDeliveryDriversWithShift(deliveryId)
+        );
     }
 
     @PostMapping("/")
@@ -61,12 +52,8 @@ public class DeliveryController {
 
     @PostMapping("/{deliveryId}/sms-confirmation/{driverId}")
     public ResponseEntity<?> sendConfirmationSMS(@PathVariable Long deliveryId, @PathVariable Long driverId) {
-        try {
-            warehouseDeliveryService.mockConfirmationSMS(deliveryId, driverId);
-            return ResponseEntity.ok(Map.of("message", "SMS confirmation sent successfully."));
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
-        }
+        warehouseDeliveryService.mockConfirmationSMS(deliveryId, driverId);
+        return ResponseEntity.ok(Map.of("message", "SMS confirmation sent successfully."));
     }
 
     @PostMapping("/{deliveryId}/assigned-driver/{driverId}")
@@ -74,12 +61,8 @@ public class DeliveryController {
             @PathVariable Long deliveryId,
             @PathVariable Long driverId
     ) {
-        try {
-            warehouseDeliveryService.assignDeliveryDriver(deliveryId, driverId);
-            return ResponseEntity.ok(Map.of("message", "Driver successfully assigned."));
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
-        }
+        warehouseDeliveryService.assignDeliveryDriver(deliveryId, driverId);
+        return ResponseEntity.ok(Map.of("message", "Driver successfully assigned."));
     }
 
     @PostMapping("/{deliveryId}/unload/{deliveryItemId}")
@@ -88,11 +71,7 @@ public class DeliveryController {
             @PathVariable Long deliveryItemId,
             @RequestBody StorageUnitPostDTO dto
     ) {
-        try {
-            StorageUnit storageUnit = storageUnitService.save(dto, deliveryItemId);
-            return ResponseEntity.ok(StorageUnitDTO.from(storageUnit));
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
-        }
+        StorageUnit storageUnit = storageUnitService.save(dto, deliveryItemId);
+        return ResponseEntity.ok(StorageUnitDTO.from(storageUnit));
     }
 }
