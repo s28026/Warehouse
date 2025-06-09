@@ -16,7 +16,8 @@ public class WarehouseService {
     private final WarehouseRepository warehouseRepository;
 
     public Warehouse findById(Long warehouseId) {
-        return warehouseRepository.findById(warehouseId).orElse(null);
+        return warehouseRepository.findById(warehouseId).orElseThrow
+                (() -> new IllegalArgumentException("Warehouse not found with id: " + warehouseId));
     }
 
     public Warehouse findById(Long warehouseId, boolean withEmployees) {

@@ -1,6 +1,8 @@
 package edu.pja.mas.warehouse.dto;
 
 public record StorageUnitPostDTO(
-        Long roomNumber
+        Integer roomNumber,
+        String qrCode,
+        String nfcTag
 ) {
 }

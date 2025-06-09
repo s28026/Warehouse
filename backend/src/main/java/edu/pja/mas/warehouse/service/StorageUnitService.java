@@ -25,15 +25,32 @@ public class StorageUnitService {
                 .sum();
     }
 
-    public StorageUnit save(StorageUnitPostDTO storageUnit, Long deliveryItemId) {
+    public StorageUnit save(StorageUnitPostDTO dto, Long deliveryItemId) {
         WarehouseDeliveryItem item = warehouseDeliveryService.findItemById(deliveryItemId);
 
+        if (dto.qrCode() == null && dto.nfcTag() == null)
+            throw new IllegalArgumentException("Either QR code or NFC tag must be provided.");
+        if (dto.qrCode() != null && dto.nfcTag() != null)
+            throw new IllegalArgumentException("Only one of QR code or NFC tag can be provided.");
+
         StorageUnit s = StorageUnit.builder()
-                .roomNumber(storageUnit.roomNumber())
+                .roomNumber(dto.roomNumber())
                 .warehouseDeliveryItem(item)
                 .warehouse(item.getDelivery().getWarehouse())
+                .nfcTag(dto.nfcTag())
+                .qrCode(dto.qrCode())
                 .build();
 
         return storageUnitRepository.save(s);
+    }
+
+    public StorageUnit findByQrCode(String qrCode) {
+        return storageUnitRepository.findByQrCode(qrCode)
+                .orElseThrow(() -> new IllegalArgumentException("Storage unit with QR code not found: " + qrCode));
+    }
+
+    public StorageUnit findByNfcTag(String nfcTag) {
+        return storageUnitRepository.findByNfcTag(nfcTag)
+                .orElseThrow(() -> new IllegalArgumentException("Storage unit with NFC tag not found: " + nfcTag));
     }
 }

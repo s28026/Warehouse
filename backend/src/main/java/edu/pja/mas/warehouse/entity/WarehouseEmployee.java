@@ -62,4 +62,17 @@ public class WarehouseEmployee {
     public boolean isWarehouseWorker() {
         return warehouseWorker != null;
     }
+
+    public boolean canUnloadItem(WarehouseDeliveryItem item) {
+        if (!employee.isWarehouseEmployee())
+            throw new IllegalStateException("Employee is not a warehouse employee");
+
+        if (isWarehouseWorker()) {
+            return item.getTotalWeight() <= warehouseWorker.getCapacity();
+        } else if (isWarehouseOperator()) {
+            return true; // WarehouseOperator can unload all kinds of items
+        } else {
+            throw new IllegalStateException("WarehouseEmployee must be either a WarehouseOperator or a WarehouseWorker");
+        }
+    }
 }

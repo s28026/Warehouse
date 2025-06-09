@@ -6,6 +6,7 @@ import edu.pja.mas.warehouse.dto.WarehousePostDTO;
 import edu.pja.mas.warehouse.entity.Warehouse;
 import edu.pja.mas.warehouse.repository.WarehouseEmployeeRepository;
 import edu.pja.mas.warehouse.service.EmployeeService;
+import edu.pja.mas.warehouse.service.StorageUnitService;
 import edu.pja.mas.warehouse.service.WarehouseEmployeeService;
 import edu.pja.mas.warehouse.service.WarehouseService;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 
 @RestController
@@ -24,6 +26,7 @@ public class WarehouseController {
     private final WarehouseEmployeeRepository warehouseEmployeeRepository;
     private final EmployeeService employeeService;
     private final WarehouseEmployeeService warehouseEmployeeService;
+    private final StorageUnitService storageUnitService;
 
     @GetMapping("/{warehouseId}")
     public ResponseEntity<WarehouseDTO> getWarehouseById(
@@ -67,5 +70,15 @@ public class WarehouseController {
         } else {
             return ResponseEntity.status(HttpStatus.CREATED).body(WarehouseDTO.from(createdWarehouse));
         }
+    }
+
+    @GetMapping("/{warehouseId}/stored-items/{itemId}/availability")
+    public ResponseEntity<?> getStoredItemById(
+            @PathVariable Long warehouseId,
+            @PathVariable Long itemId
+    ) {
+        int availability = storageUnitService.getWarehouseItemAvailability(warehouseId, itemId);
+
+        return ResponseEntity.ok(Map.of("availability", availability));
     }
 }

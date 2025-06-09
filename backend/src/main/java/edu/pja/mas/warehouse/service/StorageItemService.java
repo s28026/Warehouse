@@ -30,5 +30,4 @@ public class StorageItemService {
     public int getTotalItemsCount(Long warehouseId) {
         return (int) storageItemRepository.count();
     }
-
 }

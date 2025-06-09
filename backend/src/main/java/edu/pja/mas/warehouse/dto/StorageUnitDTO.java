@@ -5,7 +5,7 @@ import edu.pja.mas.warehouse.entity.StorageUnit;
 
 public record StorageUnitDTO(
         Long id,
-        Long roomNumber,
+        Integer roomNumber,
         Long warehouseId,
         Long warehouseDeliveryItemStorageItemId,
         int itemQuantity

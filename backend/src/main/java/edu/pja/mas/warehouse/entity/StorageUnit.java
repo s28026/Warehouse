@@ -23,7 +23,7 @@ public class StorageUnit {
     @Min(100)
     @Max(199)
     @Column(unique = true, nullable = false)
-    private Long roomNumber;
+    private Integer roomNumber;
 
     @ManyToOne
     @JoinColumn(name = "warehouse_id", nullable = false)
@@ -38,6 +38,22 @@ public class StorageUnit {
 
     @Nullable
     private String qrCode;
+
+    public void setNfcTag(String nfcTag) {
+        if (nfcTag == null || nfcTag.isBlank())
+            throw new IllegalArgumentException("NFC tag cannot be null or blank");
+
+        qrCode = null;
+        this.nfcTag = nfcTag.trim();
+    }
+
+    public void setQrCode(String qrCode) {
+        if (qrCode == null || qrCode.isBlank())
+            throw new IllegalArgumentException("QR code cannot be null or blank");
+
+        nfcTag = null;
+        this.qrCode = qrCode.trim();
+    }
 
     public StorageItem getStoredItem() {
         return warehouseDeliveryItem.getStorageItem();

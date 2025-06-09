@@ -30,6 +30,8 @@ public class DataInitializer {
     private final StorageItemRepository storageItemRepository;
     private final WarehouseDeliveryItemRepository warehouseDeliveryItemRepository;
     private final WarehouseDeliveryRepository warehouseDeliveryRepository;
+    private final StorageUnitService storageUnitService;
+    private final StorageUnitRepository storageUnitRepository;
 
     Warehouse w1, w2;
 
@@ -339,13 +341,42 @@ public class DataInitializer {
                     20
             );
 
-            warehouseDeliveryService.addItemsToDelivery(List.of(wdiDto1, wdiDto2, wdiDto3));
+            wdi1 = warehouseDeliveryService.addItemToDelivery(wdiDto1);
+            wdi2 = warehouseDeliveryService.addItemToDelivery(wdiDto2);
+            wdi3 = warehouseDeliveryService.addItemToDelivery(wdiDto3);
+
             warehouseDeliveryItemRepository.flush();
 
             setDeliveryAsCompleted(wd1, e3, e1);
             setDeliveryAsCompleted(wd2, e6, e2);
             setDeliveryAsCompleted(wd3, e6, e4);
 
+            warehouseDeliveryRepository.flush();
+        }
+
+        StorageUnit su1, su2, su3;
+        {
+            StorageUnitPostDTO suDto1 = new StorageUnitPostDTO(
+                    101,
+                    "QR123456",
+                    null
+            );
+            StorageUnitPostDTO suDto2 = new StorageUnitPostDTO(
+                    102,
+                    null,
+                    "NFC123456"
+            );
+            StorageUnitPostDTO suDto3 = new StorageUnitPostDTO(
+                    103,
+                    "QR123456",
+                    null
+            );
+
+            su1 = storageUnitService.save(suDto1, wdi1.getId());
+            su2 = storageUnitService.save(suDto2, wdi2.getId());
+            su3 = storageUnitService.save(suDto3, wdi3.getId());
+
+            storageUnitRepository.flush();
             warehouseDeliveryRepository.flush();
         }
     }
