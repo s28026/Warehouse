@@ -221,8 +221,6 @@ public class WarehouseDeliveryService {
 
     public void destroyExpiredDeliveries() {
         LocalDate sevenDaysAgo = LocalDate.now().minusDays(7);
-        List<WarehouseDelivery> expiredDeliveries = warehouseDeliveryRepository
-                .findByDeliveriesMarkedForDestruction(sevenDaysAgo);
-        warehouseDeliveryRepository.deleteAll(expiredDeliveries);
+        warehouseDeliveryRepository.bulkDeleteDeliveriesMarkedForDestruction(sevenDaysAgo);
     }
 }
