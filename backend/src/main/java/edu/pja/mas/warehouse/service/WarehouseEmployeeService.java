@@ -39,20 +39,36 @@ public class WarehouseEmployeeService {
     }
 
     public WarehouseEmployee changeToWorker(WarehouseEmployee warehouseEmployee, WarehouseWorkerPostDTO dto) {
-        warehouseEmployee.setWarehouseOperator(null);
+        if (warehouseEmployee.isWarehouseWorker())
+            throw new IllegalArgumentException("Employee is already a warehouse worker");
+
+        WarehouseWorker w = warehouseWorkerRepository.findByWarehouseEmployee_Id(warehouseEmployee.getId());
+        if (w != null) {
+            warehouseEmployee.setWarehouseWorker(w);
+            return warehouseEmployeeRepository.save(warehouseEmployee);
+        }
 
         WarehouseWorker warehouseWorker = WarehouseWorker.builder()
                 .warehouseEmployee(warehouseEmployee)
                 .capacity(dto.capacity())
                 .build();
-
         warehouseWorker = warehouseWorkerRepository.save(warehouseWorker);
+
+        warehouseEmployee.setWarehouseOperator(null);
         warehouseEmployee.setWarehouseWorker(warehouseWorker);
+
         return warehouseEmployeeRepository.save(warehouseEmployee);
     }
 
     public WarehouseEmployee changeToOperator(WarehouseEmployee warehouseEmployee, WarehouseOperatorPostDTO dto) {
-        warehouseEmployee.setWarehouseWorker(null);
+        if (warehouseEmployee.isWarehouseOperator())
+            throw new IllegalArgumentException("Employee is already a warehouse operator");
+
+        WarehouseOperator op = warehouseOperatorRepository.findByWarehouseEmployee_Id(warehouseEmployee.getId());
+        if (op != null) {
+            warehouseEmployee.setWarehouseOperator(op);
+            return warehouseEmployeeRepository.save(warehouseEmployee);
+        }
 
         WarehouseOperator warehouseOperator = WarehouseOperator.builder()
                 .warehouseEmployee(warehouseEmployee)
@@ -60,11 +76,12 @@ public class WarehouseEmployeeService {
                 .driverLicenseValidUntil(dto.driverLicenseValidUntil())
                 .vehicleType(dto.vehicleType())
                 .build();
-
         warehouseOperator.validateDriverLicense();
-
         warehouseOperator = warehouseOperatorRepository.save(warehouseOperator);
+
+        warehouseEmployee.setWarehouseWorker(null);
         warehouseEmployee.setWarehouseOperator(warehouseOperator);
+
         return warehouseEmployeeRepository.save(warehouseEmployee);
     }
 

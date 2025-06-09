@@ -17,13 +17,9 @@ public class WarehouseWorker {
     private Long id;
 
     @OneToOne
-    @JoinColumn(name = "warehouse_employee_id")
+    @JoinColumn(name = "warehouse_employee_id", unique = true)
     private WarehouseEmployee warehouseEmployee;
 
     @Min(1)
     private Integer capacity;
-
-    public boolean canCarry(int amount) {
-        return amount > 0 && amount <= capacity;
-    }
 }

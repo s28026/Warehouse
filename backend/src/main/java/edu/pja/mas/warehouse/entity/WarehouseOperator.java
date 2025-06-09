@@ -23,7 +23,7 @@ public class WarehouseOperator implements IDriver {
     private Long id;
 
     @OneToOne
-    @JoinColumn(name = "warehouse_employee_id")
+    @JoinColumn(name = "warehouse_employee_id", unique = true)
     private WarehouseEmployee warehouseEmployee;
 
     @NotBlank
@@ -34,7 +34,7 @@ public class WarehouseOperator implements IDriver {
 
     @NotNull
     @FutureOrPresent
-    private LocalDate driverLicenseValidUntil; // YYYYMMDD format
+    private LocalDate driverLicenseValidUntil;
 
     public void validateDriverLicense() {
         if (driverLicense == null || driverLicense.isBlank())

@@ -1,8 +1,5 @@
 package edu.pja.mas.warehouse.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import edu.pja.mas.warehouse.enums.DriverStatus;
 import edu.pja.mas.warehouse.enums.EmployeeType;
 import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
@@ -59,13 +56,12 @@ public class Employee extends Person {
     @Builder.Default
     private Set<EmployeeComplaint> complaints = new HashSet<>();
 
-    @OneToOne(mappedBy = "employee", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "employee")
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    @JsonManagedReference
     private WarehouseEmployee warehouseEmployee;
 
-    @OneToOne(mappedBy = "employee", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "employee")
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     private DeliveryDriver deliveryDriver;

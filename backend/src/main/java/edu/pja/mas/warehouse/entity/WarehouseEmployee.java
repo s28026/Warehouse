@@ -35,10 +35,10 @@ public class WarehouseEmployee {
     private Set<WarehouseDelivery> handledDeliveries = new HashSet<>();
 
     // The following two fields represent the dynamic state of the WarehouseEmployee entity.
-    @OneToOne(mappedBy = "warehouseEmployee", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne(mappedBy = "warehouseEmployee")
     private WarehouseOperator warehouseOperator;
 
-    @OneToOne(mappedBy = "warehouseEmployee", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne(mappedBy = "warehouseEmployee")
     private WarehouseWorker warehouseWorker;
 
     // This method is used to validate the dynamic state of the WarehouseEmployee entity.

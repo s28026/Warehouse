@@ -5,4 +5,5 @@ import org.springframework.data.repository.CrudRepository;
 
 
 public interface WarehouseWorkerRepository extends CrudRepository<WarehouseWorker, Long> {
+    WarehouseWorker findByWarehouseEmployee_Id(Long warehouseEmployeeId);
 }
