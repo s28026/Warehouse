@@ -7,6 +7,7 @@ import edu.pja.mas.warehouse.dto.WarehouseEmployeePostDTO;
 import edu.pja.mas.warehouse.entity.DeliveryDriver;
 import edu.pja.mas.warehouse.entity.Employee;
 import edu.pja.mas.warehouse.entity.WarehouseEmployee;
+import edu.pja.mas.warehouse.enums.DriverStatus;
 import edu.pja.mas.warehouse.enums.EmployeeType;
 import edu.pja.mas.warehouse.repository.DeliveryDriverRepository;
 import edu.pja.mas.warehouse.repository.EmployeeRepository;
@@ -17,6 +18,9 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 
 @Service
@@ -25,6 +29,7 @@ public class EmployeeService {
     private final EmployeeRepository employeeRepository;
     private final DeliveryDriverRepository deliveryDriverRepository;
     private final WarehouseEmployeeRepository warehouseEmployeeRepository;
+    private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 
     private final DeliveryDriverService deliveryDriverService;
     private final @Lazy WarehouseEmployeeService warehouseEmployeeService;
@@ -95,6 +100,10 @@ public class EmployeeService {
 
         if (employee.getShiftStart() != null)
             throw new IllegalArgumentException("Shift has already been started for employee: " + pesel);
+        if (employee.isDeliveryDriver()) {
+            employee.getDeliveryDriver().setStatus(DriverStatus.AVAILABLE);
+            deliveryDriverRepository.save(employee.getDeliveryDriver());
+        }
 
         employee.setShiftStart(LocalDate.now());
         employeeRepository.save(employee);
@@ -105,6 +114,10 @@ public class EmployeeService {
 
         if (employee.getShiftStart() == null)
             throw new IllegalArgumentException("Shift has not been started for employee: " + pesel);
+        if (employee.isDeliveryDriver()) {
+            employee.getDeliveryDriver().setStatus(DriverStatus.UNAVAILABLE);
+            deliveryDriverRepository.save(employee.getDeliveryDriver());
+        }
 
         employee.setShiftEnd(LocalDate.now());
         employeeRepository.save(employee);
@@ -118,6 +131,20 @@ public class EmployeeService {
 
         if (!employee.canTakeBreak(duration))
             throw new IllegalArgumentException("Employee cannot take a break of " + duration + " minutes: " + pesel);
+
+        if (employee.isDeliveryDriver()) {
+            employee.getDeliveryDriver().setStatus(DriverStatus.ON_BREAK);
+            deliveryDriverRepository.save(employee.getDeliveryDriver());
+
+            scheduler.schedule(() -> {
+                Employee ref = findById(pesel);
+                if (!ref.isDeliveryDriver())
+                    throw new IllegalArgumentException("Employee is no longer a delivery driver: " + pesel);
+
+                ref.getDeliveryDriver().setStatus(DriverStatus.AVAILABLE);
+                deliveryDriverRepository.save(employee.getDeliveryDriver());
+            }, duration, TimeUnit.MINUTES);
+        }
 
         employee.getBreaksTakenToday().add(duration);
         employeeRepository.save(employee);

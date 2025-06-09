@@ -82,28 +82,28 @@ public class DeliveryDriverService {
         deliveryDriverRepository.save(driver);
     }
 
-    public void startShift(DeliveryDriver driver) {
-        if (!driver.getEmployee().isDeliveryDriver())
-            throw new IllegalArgumentException("Employee is not a delivery driver");
-
-        if (driver.getStatus() != DriverStatus.UNAVAILABLE)
-            throw new IllegalArgumentException("Driver is not currently off shift");
-
-//        employeeService.startShift(driver.getEmployee().getPesel());
-
-        driver.setStatus(DriverStatus.AVAILABLE);
-        deliveryDriverRepository.save(driver);
-    }
-
-    public void endShift(DeliveryDriver driver) {
-        if (!driver.getEmployee().isDeliveryDriver())
-            throw new IllegalArgumentException("Employee is not a delivery driver");
-
-        if (driver.getStatus() != DriverStatus.AVAILABLE)
-            throw new IllegalArgumentException("Driver is not currently on shift");
-
-//        employeeService.endShift(driver.getEmployee().getPesel());
-        driver.setStatus(DriverStatus.UNAVAILABLE);
-        deliveryDriverRepository.save(driver);
-    }
+//    public void startShift(DeliveryDriver driver) {
+//        if (!driver.getEmployee().isDeliveryDriver())
+//            throw new IllegalArgumentException("Employee is not a delivery driver");
+//
+//        if (driver.getStatus() != DriverStatus.UNAVAILABLE)
+//            throw new IllegalArgumentException("Driver is not currently off shift");
+//
+////        employeeService.startShift(driver.getEmployee().getPesel());
+//
+//        driver.setStatus(DriverStatus.AVAILABLE);
+//        deliveryDriverRepository.save(driver);
+//    }
+//
+//    public void endShift(DeliveryDriver driver) {
+//        if (!driver.getEmployee().isDeliveryDriver())
+//            throw new IllegalArgumentException("Employee is not a delivery driver");
+//
+//        if (driver.getStatus() != DriverStatus.AVAILABLE)
+//            throw new IllegalArgumentException("Driver is not currently on shift");
+//
+////        employeeService.endShift(driver.getEmployee().getPesel());
+//        driver.setStatus(DriverStatus.UNAVAILABLE);
+//        deliveryDriverRepository.save(driver);
+//    }
 }
