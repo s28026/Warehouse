@@ -14,6 +14,7 @@ import edu.pja.mas.warehouse.repository.WarehouseDeliveryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
@@ -216,5 +217,12 @@ public class WarehouseDeliveryService {
         return dtos.stream()
                 .map(this::addItemToDelivery)
                 .toList();
+    }
+
+    public void destroyExpiredDeliveries() {
+        LocalDate sevenDaysAgo = LocalDate.now().minusDays(7);
+        List<WarehouseDelivery> expiredDeliveries = warehouseDeliveryRepository
+                .findByDeliveriesMarkedForDestruction(sevenDaysAgo);
+        warehouseDeliveryRepository.deleteAll(expiredDeliveries);
     }
 }
