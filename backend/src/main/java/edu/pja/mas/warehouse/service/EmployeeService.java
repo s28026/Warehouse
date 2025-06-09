@@ -33,7 +33,6 @@ public class EmployeeService {
 
     private final DeliveryDriverService deliveryDriverService;
     private final @Lazy WarehouseEmployeeService warehouseEmployeeService;
-    private final EmployeeComplaintService employeeComplaintService;
 
     public Employee findById(String pesel) {
         return employeeRepository.findById(pesel)
