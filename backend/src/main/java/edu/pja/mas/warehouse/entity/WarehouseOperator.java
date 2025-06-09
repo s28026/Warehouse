@@ -4,10 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDate;
 
@@ -24,6 +21,8 @@ public class WarehouseOperator implements IDriver {
 
     @OneToOne
     @JoinColumn(name = "warehouse_employee_id", unique = true, nullable = false)
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     private WarehouseEmployee warehouseEmployee;
 
     @NotBlank

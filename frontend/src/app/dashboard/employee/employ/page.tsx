@@ -13,67 +13,60 @@ import {
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
 import { ChevronsUpDown, CircleAlert } from "lucide-react";
+import { fetchApi } from "@/app/api";
+import { useRouter } from "next/navigation";
 
-async function submitData(body: EmployeePayload): Promise<Employee | string> {
-  try {
-    const res = await fetch("http://localhost:8080/employees/", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
+const submitData = (body: EmployeePayload) =>
+  fetchApi<Employee>("/employees/", {
+    method: "POST",
+    body: JSON.stringify({
+      person: {
+        pesel: body.person.pesel,
+        firstName: body.person.firstName,
+        lastName: body.person.lastName,
+        dateOfBirth: new Date(body.person.date).toISOString(),
       },
-      body: JSON.stringify({
-        person: {
-          pesel: body.person.pesel,
-          firstName: body.person.firstName,
-          lastName: body.person.lastName,
-          dateOfBirth: new Date(body.person.date).toISOString(),
+      phoneNumber: body.phone,
+      salary: body.salary,
+      warehouse: body.warehouse && {
+        warehouseId: body.warehouse.id,
+        worker: body.warehouse.worker && {
+          capacity: body.warehouse.worker.capacity,
         },
-        phoneNumber: body.phone,
-        salary: body.salary,
-        warehouse: body.warehouse && {
-          warehouseId: body.warehouse.id,
-          worker: body.warehouse.worker && {
-            capacity: body.warehouse.worker.capacity,
-          },
-          operator: body.warehouse.operator && {
-            driverLicense: body.warehouse.operator.driverLicense,
-            driverLicenseValidUntil: new Date(
-              body.warehouse.operator.driverLicenseValidUntil,
-            ).toISOString(),
-            vehicleType: body.warehouse.operator.vehicleType,
-          },
-        },
-        deliveryDriver: body.driver && {
-          driverLicense: body.driver.driverLicense,
+        operator: body.warehouse.operator && {
+          driverLicense: body.warehouse.operator.driverLicense,
           driverLicenseValidUntil: new Date(
-            body.driver.driverLicenseValidUntil,
+            body.warehouse.operator.driverLicenseValidUntil,
           ).toISOString(),
+          vehicleType: body.warehouse.operator.vehicleType,
         },
-      }),
-    });
-    const data = await res.json();
-    if (!res.ok) return "DB Error: " + res.status;
-    return data as Employee;
-  } catch (err) {
-    console.error(err);
-    return "An error occurred while submitting the data.";
-  }
-}
+      },
+      deliveryDriver: body.driver && {
+        driverLicense: body.driver.driverLicense,
+        driverLicenseValidUntil: new Date(
+          body.driver.driverLicenseValidUntil,
+        ).toISOString(),
+      },
+    }),
+  });
 
 const DashboardEmployeeEmployPage = () => {
   const { register, handleSubmit } = useForm<EmployeePayload>();
-  const [error, setError] = useState<string | null>(null);
+  const [errors, setErrors] = useState<string[]>([]);
   const [isWarehouseOpen, setIsWarehouseOpen] = useState(false);
   const [isWorkerOpen, setIsWorkerOpen] = useState(false);
   const [isOperatorOpen, setIsOperatorOpen] = useState(false);
   const [isDriverOpen, setIsDriverOpen] = useState(false);
+  const router = useRouter();
 
   const onSubmit = (data: EmployeePayload) => {
+    setErrors([]);
+
     if (!isWarehouseOpen) {
       data.warehouse = undefined;
     } else {
       if (!isWorkerOpen && !isOperatorOpen) {
-        setError("You must provide either Worker or Operator information.");
+        setErrors(["You must provide either Worker or Operator information."]);
         return;
       }
 
@@ -84,17 +77,14 @@ const DashboardEmployeeEmployPage = () => {
 
     const validationError = validateEmployeePayload(data);
     if (validationError) {
-      setError(validationError);
+      setErrors([validationError]);
       return;
     }
 
     submitData(data).then((result) => {
-      if (typeof result === "string") {
-        setError(result);
-      } else {
-        setError(null);
-        // router.push("/dashboard/");
-      }
+      if (result.errors) {
+        setErrors(result.errors);
+      } else router.push("/dashboard/");
     });
   };
 
@@ -211,10 +201,14 @@ const DashboardEmployeeEmployPage = () => {
           </Collapsible>
         </CollapsibleContent>
       </Collapsible>
-      {error && (
-        <div className="text-red-500 text-xs flex items-center gap-2">
-          <CircleAlert size={16} />
-          {error}
+      {errors.length > 0 && (
+        <div className="text-red-500 text-xs flex flex-col gap-1">
+          {errors.map((err, index) => (
+            <div key={index} className="flex items-center gap-2">
+              <CircleAlert size={16} />
+              {err}
+            </div>
+          ))}
         </div>
       )}
       <Button>Submit</Button>

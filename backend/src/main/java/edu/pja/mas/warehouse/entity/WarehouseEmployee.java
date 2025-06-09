@@ -1,7 +1,9 @@
 package edu.pja.mas.warehouse.entity;
 
+import edu.pja.mas.warehouse.enums.WarehouseEmployeeType;
 import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.util.HashSet;
@@ -32,13 +34,22 @@ public class WarehouseEmployee {
     private Warehouse warehouse;
 
     @OneToMany(mappedBy = "assignedWarehouseEmployee", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     private Set<WarehouseDelivery> handledDeliveries = new HashSet<>();
+
+    @Enumerated(EnumType.STRING)
+    private WarehouseEmployeeType type;
 
     // The following two fields represent the dynamic state of the WarehouseEmployee entity.
     @OneToOne(mappedBy = "warehouseEmployee")
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     private WarehouseOperator warehouseOperator;
 
     @OneToOne(mappedBy = "warehouseEmployee")
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     private WarehouseWorker warehouseWorker;
 
     // This method is used to validate the dynamic state of the WarehouseEmployee entity.
@@ -50,11 +61,11 @@ public class WarehouseEmployee {
     }
 
     public boolean isWarehouseOperator() {
-        return warehouseOperator != null;
+        return type == WarehouseEmployeeType.OPERATOR;
     }
 
     public boolean isWarehouseWorker() {
-        return warehouseWorker != null;
+        return type == WarehouseEmployeeType.WORKER;
     }
 
     public boolean canUnloadItem(WarehouseDeliveryItem item) {

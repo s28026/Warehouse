@@ -18,6 +18,8 @@ public class WarehouseWorker {
 
     @OneToOne
     @JoinColumn(name = "warehouse_employee_id", unique = true, nullable = false)
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     private WarehouseEmployee warehouseEmployee;
 
     @Min(1)

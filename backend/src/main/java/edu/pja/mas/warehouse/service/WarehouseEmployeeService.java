@@ -4,6 +4,7 @@ import edu.pja.mas.warehouse.dto.WarehouseEmployeePostDTO;
 import edu.pja.mas.warehouse.dto.WarehouseOperatorPostDTO;
 import edu.pja.mas.warehouse.dto.WarehouseWorkerPostDTO;
 import edu.pja.mas.warehouse.entity.*;
+import edu.pja.mas.warehouse.enums.WarehouseEmployeeType;
 import edu.pja.mas.warehouse.repository.WarehouseEmployeeRepository;
 import edu.pja.mas.warehouse.repository.WarehouseOperatorRepository;
 import edu.pja.mas.warehouse.repository.WarehouseWorkerRepository;
@@ -22,6 +23,8 @@ public class WarehouseEmployeeService {
     public WarehouseEmployee save(Employee employee, WarehouseEmployeePostDTO dto) {
         Warehouse warehouse = warehouseService.findById(dto.warehouseId());
 
+        WarehouseEmployeePostDTO.validate(dto);
+
         WarehouseEmployee warehouseEmployee = WarehouseEmployee.builder()
                 .employee(employee)
                 .warehouse(warehouse)
@@ -34,6 +37,8 @@ public class WarehouseEmployeeService {
             changeToWorker(warehouseEmployee, dto.worker());
         else if (dto.operator() != null)
             changeToOperator(warehouseEmployee, dto.operator());
+        else
+            throw new IllegalArgumentException("Must assign either worker or operator role to the employee");
 
         return warehouseEmployee;
     }
@@ -56,6 +61,7 @@ public class WarehouseEmployeeService {
 
         warehouseEmployee.setWarehouseOperator(null);
         warehouseEmployee.setWarehouseWorker(warehouseWorker);
+        warehouseEmployee.setType(WarehouseEmployeeType.WORKER);
 
         return warehouseEmployeeRepository.save(warehouseEmployee);
     }
@@ -81,6 +87,7 @@ public class WarehouseEmployeeService {
 
         warehouseEmployee.setWarehouseWorker(null);
         warehouseEmployee.setWarehouseOperator(warehouseOperator);
+        warehouseEmployee.setType(WarehouseEmployeeType.OPERATOR);
 
         return warehouseEmployeeRepository.save(warehouseEmployee);
     }

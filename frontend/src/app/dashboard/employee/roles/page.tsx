@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { SelectEmployee } from "../Select";
 import { Employee, EmployeePayload } from "../employ/types";
 import {
@@ -10,10 +10,11 @@ import {
 } from "@/components/ui/collapsible";
 import DashboardInput from "../../Input";
 import DashboardForm from "../../Form";
-import { ChevronsUpDown } from "lucide-react";
+import { ChevronsUpDown, CircleAlert } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useForm } from "react-hook-form";
 import { changeToOperator, changeToWorker } from "./api";
+import { isIP } from "net";
 
 // type RoleChangePayload = {
 // 	worker?: EmployeePayload['warehouse']['worker'];
@@ -23,9 +24,14 @@ export type RoleChangePayload = {} & EmployeePayload["warehouse"];
 
 const DashboardEmployeeRolesPage = () => {
   const { register, handleSubmit } = useForm<RoleChangePayload>();
-  const [employee, setEmployee] = useState<Employee | null>(null);
+  const [errors, setErrors] = useState<string[] | null>(null);
+  const [employee, setEmployee] = useState<WarehouseEmployee | null>(null);
   const [isWorkerOpen, setIsWorkerOpen] = useState(false);
   const [isOperatorOpen, setIsOperatorOpen] = useState(false);
+
+  useEffect(() => {
+    setErrors(null);
+  }, [isWorkerOpen, isOperatorOpen, employee]);
 
   console.log(employee);
 
@@ -33,15 +39,25 @@ const DashboardEmployeeRolesPage = () => {
     <DashboardForm
       header="Change Employee Roles"
       onSubmit={handleSubmit((d) => {
+        setErrors(null);
+
         if (!employee) return;
 
-        if (isWorkerOpen) changeToWorker(employee.person.pesel, d.worker);
-        else if (isOperatorOpen)
-          changeToOperator(employee.person.pesel, d.operator);
+        const handleRes = (d) => {
+          if (d.errors) {
+            setErrors(d.errors);
+            return;
+          }
 
-        setEmployee(null);
-        setIsWorkerOpen(false);
-        setIsOperatorOpen(false);
+          setEmployee(null);
+          setIsWorkerOpen(false);
+          setIsOperatorOpen(false);
+        };
+        const pesel = employee.employee.person.pesel;
+
+        if (isWorkerOpen) changeToWorker(pesel, d.worker).then(handleRes);
+        else if (isOperatorOpen)
+          changeToOperator(pesel, d.operator).then(handleRes);
       })}
     >
       <div className="!mx-auto">
@@ -112,6 +128,16 @@ const DashboardEmployeeRolesPage = () => {
                 />
               </CollapsibleContent>
             </Collapsible>
+          )}
+          {errors && (
+            <div className="text-red-500 !py-1">
+              {errors.map((error, index) => (
+                <div key={error} className="flex items-center gap-1">
+                  <CircleAlert size={16} />
+                  <p className="text-xs">{error}</p>
+                </div>
+              ))}
+            </div>
           )}
           <Button
             disabled={!(isWorkerOpen || isOperatorOpen)}

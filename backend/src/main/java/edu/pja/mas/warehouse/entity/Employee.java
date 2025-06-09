@@ -67,11 +67,11 @@ public class Employee extends Person {
     private DeliveryDriver deliveryDriver;
 
     public boolean isDeliveryDriver() {
-        return deliveryDriver != null && employeeTypes.contains(EmployeeType.DELIVERY_DRIVER);
+        return employeeTypes.contains(EmployeeType.DELIVERY_DRIVER);
     }
 
     public boolean isWarehouseEmployee() {
-        return warehouseEmployee != null && employeeTypes.contains(EmployeeType.WAREHOUSE_EMPLOYEE);
+        return employeeTypes.contains(EmployeeType.WAREHOUSE_EMPLOYEE);
     }
 
     public void setSalary(int salary) {
