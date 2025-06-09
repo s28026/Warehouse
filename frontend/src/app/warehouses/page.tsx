@@ -32,8 +32,8 @@ const WarehousePage = () => {
   }, []);
 
   return (
-    <div className="flex-row">
-      <h1 className="text-xl font-bold text-center !pb-2">📦 {label}</h1>
+    <div className="flex-row !mt-12">
+      <h1 className="text-xl font-bold text-center !pb-4">📦 {label}</h1>
       <div className="container mx-auto py-10 flex flex-col gap-y-2">
         {warehouses &&
           warehouses.map((w) => (

@@ -11,7 +11,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <div className="!m-auto w-128 !pt-25">
+        <div className="!m-auto w-128">
           <GlobalStateProvider>{children}</GlobalStateProvider>
         </div>
       </body>
