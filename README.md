@@ -4,6 +4,10 @@
 
 Warehouse Management System is a Spring Boot-based application designed to manage employees in a warehouse environment. It supports functionalities such as employee management, shift tracking, and role-specific operations for delivery drivers and warehouse employees.
 
+## UML Diagram
+
+![UML Diagram](https://github.com/user-attachments/assets/cb6665d1-6df8-465e-8f18-3688eb8add13)
+
 ## Features
 
 - **Employee Management**: Add, update, and retrieve employee details.
