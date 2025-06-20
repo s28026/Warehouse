@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 
@@ -17,5 +18,5 @@ public interface WarehouseDeliveryRepository extends JpaRepository<WarehouseDeli
             WHERE wd.status IN ('AWAITING_PICKUP_ADDRESS', 'INVALID_ADDRESS')
             AND wd.registeredAt < :threshold
             """)
-    void bulkDeleteDeliveriesMarkedForDestruction(@Param("threshold") LocalDate threshold);
+    void bulkDeleteDeliveriesMarkedForDestruction(@Param("threshold") LocalDateTime threshold);
 }

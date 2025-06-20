@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
+import java.util.Optional;
 
 
 public interface DeliveryDriverRepository extends JpaRepository<DeliveryDriver, Long> {
@@ -44,4 +45,6 @@ public interface DeliveryDriverRepository extends JpaRepository<DeliveryDriver, 
                 )
             """)
     List<DeliveryDriver> findAllAvailableForWarehouseDelivery(Long deliveryId);
+
+    Optional<DeliveryDriver> findByEmployeePesel(String employeePesel);
 }

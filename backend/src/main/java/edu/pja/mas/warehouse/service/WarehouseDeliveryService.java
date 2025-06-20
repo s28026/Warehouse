@@ -230,7 +230,7 @@ public class WarehouseDeliveryService {
 
     public void destroyExpiredDeliveries() {
         LocalDate sevenDaysAgo = LocalDate.now().minusDays(7);
-        warehouseDeliveryRepository.bulkDeleteDeliveriesMarkedForDestruction(sevenDaysAgo);
+        warehouseDeliveryRepository.bulkDeleteDeliveriesMarkedForDestruction(sevenDaysAgo.atStartOfDay());
     }
 
     public void markForUnload(Long deliveryId) {

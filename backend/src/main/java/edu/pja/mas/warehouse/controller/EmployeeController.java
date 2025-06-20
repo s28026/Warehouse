@@ -1,6 +1,7 @@
 package edu.pja.mas.warehouse.controller;
 
 import edu.pja.mas.warehouse.dto.*;
+import edu.pja.mas.warehouse.entity.DeliveryDriver;
 import edu.pja.mas.warehouse.entity.Employee;
 import edu.pja.mas.warehouse.entity.EmployeeComplaint;
 import edu.pja.mas.warehouse.entity.WarehouseEmployee;
@@ -70,5 +71,14 @@ public class EmployeeController {
         WarehouseEmployee warehouseEmployee = warehouseEmployeeService.findByEmployeePesel(employeePesel);
         warehouseEmployee = warehouseEmployeeService.changeToWorker(warehouseEmployee, dto);
         return ResponseEntity.ok(WarehouseEmployeeDTO.from(warehouseEmployee));
+    }
+
+    @GetMapping("/{employeePesel}/deliveries")
+    public ResponseEntity<EmployeeDeliveriesDTO> getEmployeeDeliveries(
+            @PathVariable String employeePesel
+    ) {
+        DeliveryDriver driver = deliveryDriverService.findByEmployedPesel(employeePesel);
+
+        return ResponseEntity.ok(EmployeeDeliveriesDTO.from(driver));
     }
 }

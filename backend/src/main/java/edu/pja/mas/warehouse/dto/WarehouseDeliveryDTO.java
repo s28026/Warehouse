@@ -4,6 +4,7 @@ import edu.pja.mas.warehouse.entity.WarehouseDelivery;
 import edu.pja.mas.warehouse.enums.WarehouseDeliveryStatus;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 
 public record WarehouseDeliveryDTO(
@@ -22,5 +23,11 @@ public record WarehouseDeliveryDTO(
                 delivery.getDeliveredAt(),
                 delivery.getStatus()
         );
+    }
+
+    public static List<WarehouseDeliveryDTO> from(List<WarehouseDelivery> deliveries) {
+        return deliveries.stream()
+                .map(WarehouseDeliveryDTO::from)
+                .toList();
     }
 }

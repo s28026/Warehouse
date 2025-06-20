@@ -1,0 +1,26 @@
+nohup: ignoring input
+
+> frontend@0.1.0 dev
+> next dev --turbopack
+
+   ▲ Next.js 15.3.3 (Turbopack)
+   - Local:        http://localhost:3000
+   - Network:      http://192.168.88.103:3000
+
+ ✓ Starting...
+ ✓ Ready in 717ms
+ ○ Compiling /dashboard ...
+ ✓ Compiled /dashboard in 1726ms
+ GET /dashboard 200 in 1991ms
+ ⚠ Cross origin request detected from 192.168.88.103 to /_next/* resource. In a future major version of Next.js, you will need to explicitly configure "allowedDevOrigins" in next.config to allow this.
+Read more: https://nextjs.org/docs/app/api-reference/config/next-config-js/allowedDevOrigins
+ ○ Compiling /warehouses ...
+ ✓ Compiled /warehouses in 579ms
+ GET /warehouses 200 in 601ms
+ GET /warehouses 200 in 60ms
+ GET /dashboard 200 in 21ms
+ ○ Compiling /dashboard/employee/deliveries ...
+ ✓ Compiled /dashboard/employee/deliveries in 610ms
+ GET /dashboard/employee/deliveries 200 in 631ms
+ ✓ Compiled /dashboard/employee/deliveries/[pesel] in 476ms
+ GET /dashboard/employee/deliveries/84848272413 200 in 838ms

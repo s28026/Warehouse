@@ -8,7 +8,7 @@ export const fetchApi = async <T>(
   options?: RequestInit,
 ): Promise<T | ErrorResponse> => {
   try {
-    const res = await fetch(`http://localhost:8080${endpoint}`, {
+    const res = await fetch(`http://192.168.88.103:8080${endpoint}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

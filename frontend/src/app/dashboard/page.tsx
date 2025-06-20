@@ -27,6 +27,9 @@ const DashboardPage = () => {
           <DashboardButton href="/employee/terminate" disabled={true}>
             Terminate
           </DashboardButton>
+          <DashboardButton href="/employee/deliveries">
+            Deliveries
+          </DashboardButton>
         </DashboardPanel>
         <DashboardPanel label="Delivery">
           <DashboardButton href="/delivery/new/pickup">New</DashboardButton>

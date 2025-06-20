@@ -2,6 +2,7 @@ package edu.pja.mas.warehouse.service;
 
 import edu.pja.mas.warehouse.dto.DeliveryDriverDTO;
 import edu.pja.mas.warehouse.dto.DeliveryDriverPostDTO;
+import edu.pja.mas.warehouse.dto.EmployeeDeliveriesDTO;
 import edu.pja.mas.warehouse.entity.DeclinedDelivery;
 import edu.pja.mas.warehouse.entity.DeliveryDriver;
 import edu.pja.mas.warehouse.entity.Employee;
@@ -22,7 +23,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class DeliveryDriverService {
     private final DeliveryDriverRepository deliveryDriverRepository;
-    private final WarehouseDeliveryRepository warehouseDeliveryRepository;
     private final DeclinedDeliveryRepository declinedDeliveryRepository;
 
     public DeliveryDriver findById(Long id) {
@@ -30,9 +30,9 @@ public class DeliveryDriverService {
                 .orElseThrow(() -> new IllegalArgumentException("Delivery driver not found with id: " + id));
     }
 
-    public DeliveryDriver findEmployedById(Long id) {
-        return deliveryDriverRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Delivery driver not found with id: " + id));
+    public DeliveryDriver findByEmployedPesel(String pesel) {
+        return deliveryDriverRepository.findByEmployeePesel(pesel)
+                .orElseThrow(() -> new IllegalArgumentException("Delivery driver not found with pesel: " + pesel));
     }
 
     public DeliveryDriver save(Employee employee, DeliveryDriverPostDTO dto) {
